@@ -12,5 +12,7 @@
 </head>
 <body>
     <h1>Local adicionado com sucesso!</h1>
+    <br />
+    <a href="/local-listar">Ir para listagem</a>
 </body>
 </html>
