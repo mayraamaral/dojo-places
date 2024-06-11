@@ -1,12 +1,10 @@
 package br.com.alura.dojoplaces.model;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Past;
-import jakarta.validation.constraints.Pattern;
+import br.com.alura.dojoplaces.utils.DateUtils;
 
 import java.time.LocalDate;
 
-public class LocalDTO {
+public class LocalRequestDTO {
 //    @Max(value = 100, message = "São permitidos nomes com até 100 caracteres")
     private String nome;
 
@@ -21,9 +19,9 @@ public class LocalDTO {
 
     private LocalDate dataCriacao;
 
-    public LocalDTO() {}
+    public LocalRequestDTO() {}
 
-    public LocalDTO(String nome, String codigo, String bairro, String cidade, String dataCriacao) {
+    public LocalRequestDTO(String nome, String codigo, String bairro, String cidade, String dataCriacao) {
         this.nome = nome;
         this.codigo = codigo;
         this.bairro = bairro;
@@ -31,8 +29,21 @@ public class LocalDTO {
         this.dataCriacao = LocalDate.parse(dataCriacao);
     }
 
+    public LocalRequestDTO(String nome, String codigo, String bairro, String cidade, LocalDate dataCriacao) {
+        this.nome = nome;
+        this.codigo = codigo;
+        this.bairro = bairro;
+        this.cidade = cidade;
+        this.dataCriacao = dataCriacao;
+    }
+
+
     public Local toModel() {
         return new Local(nome, codigo, bairro, cidade, dataCriacao);
+    }
+
+    public String getDataFormatada() {
+        return DateUtils.formatDate(dataCriacao);
     }
 
     public String getNome() {

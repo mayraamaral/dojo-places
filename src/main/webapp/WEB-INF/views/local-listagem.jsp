@@ -11,6 +11,7 @@
             <th>Bairro</th>
             <th>Cidade</th>
             <th>Data de criação</th>
+            <th>Ações</th>
         </tr>
         <br />
     <c:forEach items="${locais}" var="local" varStatus="loop">
@@ -20,7 +21,11 @@
             <td>${local.bairro}</td>
             <td>${local.cidade}</td>
             <td>${local.dataFormatada}</td>
-            <a href="/local-editar?id=${loop.index+1}">Editar</a>
+            <td>
+                <a href="/local-editar?id=${local.id}">Editar</a>
+                <a href="/local-deletar?id=${local.id}">Deletar</a>
+            </td>
+
         </tr>
         <br />
     </c:forEach>

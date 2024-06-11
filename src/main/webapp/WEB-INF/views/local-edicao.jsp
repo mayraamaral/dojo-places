@@ -6,7 +6,7 @@
     <title>Edição de local</title>
 </head>
 <body>
-<form:form action="/local-editar" method="" modelAttribute="localEditDTO">
+<form:form action="/local-editar?id=${id}" method="post" modelAttribute="localEditDTO">
     <form:label path="nome">Nome:</form:label>
     <form:input path="nome" type="text" />
 
@@ -19,7 +19,7 @@
     <form:label path="cidade">Cidade:</form:label>
     <form:input path="cidade" type="text" />
 
-    <input value="Adicionar" type="submit" />
+    <input value="Editar" type="submit" />
 </form:form>
 </body>
 </html>

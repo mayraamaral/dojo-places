@@ -1,16 +1,36 @@
 package br.com.alura.dojoplaces.model;
 
-import br.com.alura.dojoplaces.utils.DateUtils;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
+@Entity
 public class Local {
+
+    @Id
+    @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column
     private String nome;
+
+    @Column
     private String codigo;
+
+    @Column
     private String bairro;
+
+    @Column
     private String cidade;
+
+    @Column(name = "data_criacao")
     private LocalDate dataCriacao;
+
+    @Column(name = "data_atualizacao")
     private LocalDate dataAtualizacao;
+
+    public Local() {}
 
     public Local(String nome, String codigo, String bairro, String cidade, LocalDate dataCriacao) {
         this.nome = nome;
@@ -26,6 +46,18 @@ public class Local {
         this.bairro = localEdited.getBairro();
         this.cidade = localEdited.getCidade();
         this.dataAtualizacao = LocalDate.now();
+    }
+
+    public LocalRequestDTO toRequestDTO() {
+        return new LocalRequestDTO(nome, codigo, bairro, cidade, dataCriacao);
+    }
+
+    public LocalResponseDTO toResponseDTO() {
+        return new LocalResponseDTO(id, nome, codigo, bairro, cidade, dataCriacao);
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getNome() {
@@ -46,10 +78,6 @@ public class Local {
 
     public LocalDate getDataCriacao() {
         return dataCriacao;
-    }
-
-    public String getDataFormatada() {
-        return DateUtils.formatDate(dataCriacao);
     }
 
     private void setDataCriacao() {
