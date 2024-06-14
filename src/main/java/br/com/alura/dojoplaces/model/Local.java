@@ -53,7 +53,7 @@ public class Local {
     }
 
     public LocalResponseDTO toResponseDTO() {
-        return new LocalResponseDTO(id, nome, codigo, bairro, cidade, dataCriacao);
+        return new LocalResponseDTO(id, nome, codigo, bairro, cidade, dataCriacao, dataAtualizacao);
     }
 
     public Long getId() {
@@ -78,10 +78,6 @@ public class Local {
 
     public LocalDate getDataCriacao() {
         return dataCriacao;
-    }
-
-    private void setDataCriacao() {
-        this.dataCriacao = LocalDate.now();
     }
 
     @Override

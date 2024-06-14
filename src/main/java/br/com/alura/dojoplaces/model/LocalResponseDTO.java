@@ -3,6 +3,7 @@ package br.com.alura.dojoplaces.model;
 import br.com.alura.dojoplaces.utils.DateUtils;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 public class LocalResponseDTO {
     private Long id;
@@ -13,13 +14,14 @@ public class LocalResponseDTO {
     private LocalDate dataCriacao;
     private LocalDate dataAtualizacao;
 
-    public LocalResponseDTO(Long id, String nome, String codigo, String bairro, String cidade, LocalDate dataCriacao) {
+    public LocalResponseDTO(Long id, String nome, String codigo, String bairro, String cidade, LocalDate dataCriacao, LocalDate dataAtualizacao) {
         this.id = id;
         this.nome = nome;
         this.codigo = codigo;
         this.bairro = bairro;
         this.cidade = cidade;
         this.dataCriacao = dataCriacao;
+        this.dataAtualizacao = dataAtualizacao;
     }
 
     public Long getId() {
@@ -42,16 +44,20 @@ public class LocalResponseDTO {
         return cidade;
     }
 
-    public String getDataFormatada() {
+    public String getDataCriacaoFormatada() {
         return DateUtils.formatDate(dataCriacao);
+    }
+
+    public String getDataAtualizacaoFormatada() {
+        if(Optional.ofNullable(dataAtualizacao).isEmpty()) {
+            return "";
+        }
+
+        return DateUtils.formatDate(dataAtualizacao);
     }
 
     public LocalDate getDataCriacao() {
         return dataCriacao;
-    }
-
-    public void setDataCriacao(LocalDate dataCriacao) {
-        this.dataCriacao = dataCriacao;
     }
 
     public LocalDate getDataAtualizacao() {

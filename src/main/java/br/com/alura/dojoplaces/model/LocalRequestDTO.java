@@ -1,33 +1,32 @@
 package br.com.alura.dojoplaces.model;
 
-import br.com.alura.dojoplaces.utils.DateUtils;
+import jakarta.validation.constraints.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
 public class LocalRequestDTO {
-//    @Max(value = 100, message = "São permitidos nomes com até 100 caracteres")
+
+    @Size(max = 100, message = "São permitidos nomes com até 100 caracteres")
+    @NotBlank(message = "O nome não pode ficar em branco")
     private String nome;
 
-//    @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Não são permitidos caracteres especiais, nem espaços")
+    @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Não são permitidos caracteres especiais, nem espaços")
+    @NotBlank(message = "O código não pode ficar em branco")
     private String codigo;
 
-//    @Max(value = 100, message = "São permitidos bairros com até 100 caracteres")
+    @Size(max = 100, message = "São permitidos nomes de bairros com até 100 caracteres")
+    @NotBlank(message = "O bairro não pode ficar em branco")
     private String bairro;
 
-//    @Max(value = 100, message = "São permitidos cidades com até 100 caracteres")
+    @Size(max = 100, message = "São permitidos nomes de cidades com até 100 caracteres")
+    @NotBlank(message = "A cidade não pode ficar em branco")
     private String cidade;
 
+    @PastOrPresent(message = "A data precisa ser no passado ou no presente")
+    @NotNull(message = "A data não pode ficar em branco")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE, pattern = "dd/MM/yyyy")
     private LocalDate dataCriacao;
-
-    public LocalRequestDTO() {}
-
-    public LocalRequestDTO(String nome, String codigo, String bairro, String cidade, String dataCriacao) {
-        this.nome = nome;
-        this.codigo = codigo;
-        this.bairro = bairro;
-        this.cidade = cidade;
-        this.dataCriacao = LocalDate.parse(dataCriacao);
-    }
 
     public LocalRequestDTO(String nome, String codigo, String bairro, String cidade, LocalDate dataCriacao) {
         this.nome = nome;
@@ -37,52 +36,27 @@ public class LocalRequestDTO {
         this.dataCriacao = dataCriacao;
     }
 
-
     public Local toModel() {
         return new Local(nome, codigo, bairro, cidade, dataCriacao);
-    }
-
-    public String getDataFormatada() {
-        return DateUtils.formatDate(dataCriacao);
     }
 
     public String getNome() {
         return nome;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
     public String getCodigo() {
         return codigo;
-    }
-
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
     }
 
     public String getBairro() {
         return bairro;
     }
 
-    public void setBairro(String bairro) {
-        this.bairro = bairro;
-    }
-
     public String getCidade() {
         return cidade;
     }
 
-    public void setCidade(String cidade) {
-        this.cidade = cidade;
-    }
-
     public LocalDate getDataCriacao() {
         return dataCriacao;
-    }
-
-    public void setDataCriacao(String dataCriacao) {
-        this.dataCriacao = LocalDate.parse(dataCriacao);
     }
 }

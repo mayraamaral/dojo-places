@@ -8,12 +8,13 @@ import br.com.alura.dojoplaces.repository.LocalRepository;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class LocalController {
@@ -25,21 +26,6 @@ public class LocalController {
     }
 
     @GetMapping("/local")
-    public String formCadastro(LocalRequestDTO localDTO, Model model) {
-        model.addAttribute("localDTO", localDTO);
-
-        return "/local-cadastro";
-    }
-
-    @PostMapping("/local")
-    public String adicionar(@Valid LocalRequestDTO localDTO, Model model) {
-
-        localRepository.save(localDTO.toModel());
-
-        return "/local-adicionado-sucesso";
-    }
-
-    @GetMapping("/local-listar")
     public String listar(Model model) {
         List<LocalResponseDTO> locais = localRepository.findAll()
             .stream().map(Local::toResponseDTO)
@@ -47,7 +33,25 @@ public class LocalController {
 
         model.addAttribute("locais", locais);
 
-        return "/local-listagem";
+        return "local-listagem";
+    }
+
+    @GetMapping("/local-adicionar")
+    public String formAdicionar(LocalRequestDTO localRequestDTO, Model model) {
+        model.addAttribute("localRequestDTO", localRequestDTO);
+
+        return "local-cadastro";
+    }
+
+    @PostMapping("/local-salvar")
+    public String adicionar(@Valid LocalRequestDTO localRequestDTO, BindingResult result, Model model) {
+        if(result.hasErrors()) {
+            return formAdicionar(localRequestDTO, model);
+        }
+
+        localRepository.save(localRequestDTO.toModel());
+
+        return "local-adicionado-sucesso";
     }
 
     @GetMapping("/local-editar")
@@ -55,23 +59,32 @@ public class LocalController {
         model.addAttribute("localEditDTO", localEditDTO);
         model.addAttribute("id", id);
 
-        return "/local-edicao";
+        if(localRepository.findById(id).isEmpty()) {
+            return "local-nao-encontrado";
+        }
+
+        return "local-edicao";
     }
 
     @PostMapping("/local-editar")
     public String editar(@Valid LocalEditDTO localEditDTO, Long id) {
-
         Local localToBeEdited = localRepository.findById(id).get();
         localToBeEdited.edit(localEditDTO);
         localRepository.save(localToBeEdited);
 
-        return "redirect:/local-listar";
+        return "redirect:/local";
     }
 
     @GetMapping("/local-deletar")
     public String deletar(@RequestParam("id") Long id) {
         localRepository.deleteById(id);
 
-        return "/local-deletado-sucesso";
+        return "local-deletado-sucesso";
+    }
+
+    @GetMapping("/local-nao-encontrado")
+    public String localNaoEncontrado() {
+
+        return "local-nao-encontrado";
     }
 }
