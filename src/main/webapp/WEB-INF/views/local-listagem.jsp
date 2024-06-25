@@ -13,6 +13,22 @@
     </script>
 </head>
 <body>
+    <c:if test="${foiAdicionadoLocal}">
+        <div class="d-flex justify-content-end pt-4 px-4">
+            <div class="alert alert-success col-md-2" role="alert" >
+                Local adicionado com sucesso!
+            </div>
+        </div>
+    </c:if>
+
+    <c:if test="${foiDeletadoLocal}">
+        <div class="d-flex justify-content-end pt-4 px-4">
+            <div class="alert alert-danger col-md-2" role="alert" >
+                Local deletado com sucesso!
+            </div>
+        </div>
+    </c:if>
+
     <div class="container">
         <h1 class="text-center py-3">Listagem de locais</h1>
         <div class="d-flex justify-content-start pb-3">
@@ -37,7 +53,7 @@
                     <td class="align-middle">${local.bairro}</td>
                     <td class="align-middle">${local.cidade}</td>
                     <td class="align-middle">${local.dataCriacaoFormatada}</td>
-                    <td class="align-middle">${local.dataAtualizacaoFormatada}</td>
+                    <td class="align-middle">${local.diasDesdeAtualizacaoFormatadoOuStringVazia}</td>
                     <td class="align-middle">
                         <a href="/local-editar?id=${local.id}" class="btn btn-primary">Editar</a>
                         <a href="/local-deletar?id=${local.id}" class="btn btn-danger">Deletar</a>
