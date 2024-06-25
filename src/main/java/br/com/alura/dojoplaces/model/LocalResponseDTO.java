@@ -3,6 +3,7 @@ package br.com.alura.dojoplaces.model;
 import br.com.alura.dojoplaces.utils.DateUtils;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.Optional;
 
 public class LocalResponseDTO {
@@ -54,6 +55,24 @@ public class LocalResponseDTO {
         }
 
         return DateUtils.formatDate(dataAtualizacao);
+    }
+
+    public int getDiasDesdeADataAtualizacao() {
+        if(Optional.ofNullable(dataAtualizacao).isEmpty()) {
+            return 0;
+        }
+
+        return Period.between(dataAtualizacao, LocalDate.now()).getDays();
+    }
+
+    public String getDiasDesdeAtualizacaoFormatadoOuStringVazia() {
+        int diasAtualizacao = getDiasDesdeADataAtualizacao();
+
+        if(diasAtualizacao > 0) {
+            return "Atualizado há " + diasAtualizacao + " dias";
+        }
+
+        return "";
     }
 
     public LocalDate getDataCriacao() {
