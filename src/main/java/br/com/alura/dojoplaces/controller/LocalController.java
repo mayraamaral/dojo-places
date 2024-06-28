@@ -6,6 +6,7 @@ import br.com.alura.dojoplaces.model.LocalEditDTO;
 import br.com.alura.dojoplaces.model.LocalResponseDTO;
 import br.com.alura.dojoplaces.repository.LocalRepository;
 
+import br.com.alura.dojoplaces.utils.validator.CodigoValidator;
 import jakarta.validation.Valid;
 
 import org.springframework.stereotype.Controller;
@@ -23,9 +24,11 @@ import java.util.List;
 public class LocalController {
 
     private final LocalRepository localRepository;
+    private final CodigoValidator codigoValidator;
 
-    public LocalController(LocalRepository localRepository) {
+    public LocalController(LocalRepository localRepository, CodigoValidator codigoValidator) {
         this.localRepository = localRepository;
+        this.codigoValidator = codigoValidator;
     }
 
     @GetMapping("/local")
@@ -48,9 +51,7 @@ public class LocalController {
 
     @PostMapping("/local-salvar")
     public String adicionar(@Valid LocalRequestDTO localRequestDTO, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
-        if(localRepository.findByCodigo(localRequestDTO.getCodigo()).isPresent()) {
-            result.addError(new FieldError("localRequestDTO", "codigo", "O código já existe"));
-        }
+        codigoValidator.validate(localRequestDTO, result);
 
         if(result.hasErrors()) {
             return formAdicionar(localRequestDTO, model);
