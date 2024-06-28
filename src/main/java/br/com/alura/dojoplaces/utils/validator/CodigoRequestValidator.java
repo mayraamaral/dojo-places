@@ -7,11 +7,11 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 @Component
-public class CodigoValidator implements Validator {
+public class CodigoRequestValidator implements Validator {
 
     private final LocalRepository localRepository;
 
-    public CodigoValidator(LocalRepository localRepository) {
+    public CodigoRequestValidator(LocalRepository localRepository) {
         this.localRepository = localRepository;
     }
 
@@ -24,7 +24,7 @@ public class CodigoValidator implements Validator {
     public void validate(Object target, Errors errors) {
         LocalRequestDTO localRequestDTO = (LocalRequestDTO) target;
 
-        if(localRepository.findByCodigo(localRequestDTO.getCodigo()).isPresent()) {
+        if(localRepository.existsByCodigo(localRequestDTO.getCodigo())) {
             errors.rejectValue("codigo", "codigo.exist", "O código já existe");
         }
     }

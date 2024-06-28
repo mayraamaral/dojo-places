@@ -56,6 +56,10 @@ public class Local {
         return new LocalResponseDTO(id, nome, codigo, bairro, cidade, dataCriacao, dataAtualizacao);
     }
 
+    public LocalEditDTO toEditDTO() {
+        return new LocalEditDTO(id, nome, codigo, bairro, cidade);
+    }
+
     public Long getId() {
         return id;
     }

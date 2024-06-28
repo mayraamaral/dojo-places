@@ -8,5 +8,7 @@ import java.util.Optional;
 
 @Repository
 public interface LocalRepository extends JpaRepository<Local, Long> {
-    Optional<Local> findByCodigo(String codigo);
+    boolean existsByCodigo(String codigo);
+
+    boolean existsByCodigoAndIdNot(String codigo, Long id);
 }

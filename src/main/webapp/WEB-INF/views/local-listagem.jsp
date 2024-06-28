@@ -37,6 +37,7 @@
         <table class="table table-bordered table-hover">
             <thead>
                 <tr>
+                    <th scope="col">Id</th>
                     <th scope="col">Nome</th>
                     <th scope="col">Código</th>
                     <th scope="col">Bairro</th>
@@ -48,6 +49,7 @@
             </thead>
             <c:forEach items="${locais}" var="local" varStatus="loop">
                 <tr>
+                    <td class="align-middle">${local.id}</td>
                     <td class="align-middle">${local.nome}</td>
                     <td class="align-middle">${local.codigo}</td>
                     <td class="align-middle">${local.bairro}</td>

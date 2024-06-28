@@ -6,27 +6,27 @@ import br.com.alura.dojoplaces.model.LocalEditDTO;
 import br.com.alura.dojoplaces.model.LocalResponseDTO;
 import br.com.alura.dojoplaces.repository.LocalRepository;
 
-import br.com.alura.dojoplaces.utils.validator.CodigoValidator;
+import br.com.alura.dojoplaces.utils.validator.CodigoRequestValidator;
 import jakarta.validation.Valid;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class LocalController {
 
     private final LocalRepository localRepository;
-    private final CodigoValidator codigoValidator;
+    private final CodigoRequestValidator codigoValidator;
 
-    public LocalController(LocalRepository localRepository, CodigoValidator codigoValidator) {
+    public LocalController(LocalRepository localRepository, CodigoRequestValidator codigoValidator) {
         this.localRepository = localRepository;
         this.codigoValidator = codigoValidator;
     }
@@ -65,21 +65,43 @@ public class LocalController {
     }
 
     @GetMapping("/local-editar")
-    public String formEdicao(LocalEditDTO localEditDTO, @RequestParam("id") Long id, Model model) {
-        model.addAttribute("localEditDTO", localEditDTO);
-        model.addAttribute("id", id);
+    public String formEdicao(@RequestParam("id") Long id, Model model) {
+        Optional<Local> localToBeEdited = localRepository.findById(id);
 
-        if(localRepository.findById(id).isEmpty()) {
+        if(localToBeEdited.isEmpty()) {
             return "local-nao-encontrado";
         }
+
+        LocalEditDTO localEditDTO = localToBeEdited.get().toEditDTO();
+        model.addAttribute("localEditDTO", localEditDTO);
+
+        return "local-edicao";
+    }
+
+    public String formEdicao(LocalEditDTO localEditDTO, Model model) {
+//        Optional<Local> localToBeEdited = localRepository.findById(id);
+
+//        if(localToBeEdited.isEmpty()) {
+//            return "local-nao-encontrado";
+//        }
+
+//        LocalEditDTO localEdit = localToBeEdited.get().toEditDTO();
+        model.addAttribute("localEditDTO", localEditDTO);
 
         return "local-edicao";
     }
 
     @PostMapping("/local-editar")
-    public String editar(@Valid LocalEditDTO localEditDTO, Long id) {
+    public String editar(@Valid LocalEditDTO localEditDTO, BindingResult result, Model model, Long id) {
+        if(result.hasErrors()) {
+            return formEdicao(localEditDTO, model);
+        }
+
+        System.out.println(localEditDTO.getId());
+
         Local localToBeEdited = localRepository.findById(id).get();
         localToBeEdited.edit(localEditDTO);
+
         localRepository.save(localToBeEdited);
 
         return "redirect:/local";

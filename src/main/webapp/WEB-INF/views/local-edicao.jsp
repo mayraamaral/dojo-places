@@ -17,18 +17,24 @@
     <div class="container-sm">
         <h1 class="text-center py-3">Edição de locais</h1>
         <div class="d-flex justify-content-center">
-            <form:form action="/local-editar?id=${id}" method="post" modelAttribute="localEditDTO">
+            <form:form action="/local-editar?id=${localEditDTO.id}" method="post" modelAttribute="localEditDTO">
                 <form:label path="nome" class="form-label">Nome:</form:label>
                 <form:input path="nome" type="text" class="form-control" />
+                <form:errors path="nome" cssClass="text-danger d-block" />
 
                 <form:label path="codigo" class="form-label">Código:</form:label>
                 <form:input path="codigo" type="text" class="form-control" />
+                <form:errors path="codigo" cssClass="text-danger d-block" />
 
                 <form:label path="bairro" class="form-label">Bairro:</form:label>
                 <form:input path="bairro" type="text" class="form-control" />
+                <form:errors path="bairro" cssClass="text-danger d-block" />
 
                 <form:label path="cidade" class="form-label">Cidade:</form:label>
                 <form:input path="cidade" type="text" class="form-control" />
+                <form:errors path="cidade" cssClass="text-danger d-block" />
+
+                <input id="id" name="id" type="hidden">
 
                 <div class="pt-3 d-flex justify-content-center">
                     <button type="submit" class="btn btn-primary">Editar</button>

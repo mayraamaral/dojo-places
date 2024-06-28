@@ -14,15 +14,15 @@ import java.util.Optional;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.*;
 
-class CodigoValidatorTest {
+class CodigoRequestValidatorTest {
 
     private LocalRepository localRepository;
-    private CodigoValidator codigoValidator;
+    private CodigoRequestValidator codigoValidator;
 
     @BeforeEach
     void setUp() {
         localRepository = mock(LocalRepository.class);
-        codigoValidator = new CodigoValidator(localRepository);
+        codigoValidator = new CodigoRequestValidator(localRepository);
     }
 
     @Test
@@ -31,7 +31,7 @@ class CodigoValidatorTest {
         Local local = localDto.toModel();
         Errors errors = new BeanPropertyBindingResult(localDto, "localRequestDTO");
 
-        when(localRepository.findByCodigo(any())).thenReturn(Optional.of(local));
+        when(localRepository.existsByCodigo(any())).thenReturn(true);
         codigoValidator.validate(localDto, errors);
 
         assertThat(errors.hasFieldErrors("codigo")).isTrue();
@@ -43,7 +43,7 @@ class CodigoValidatorTest {
         LocalRequestDTO localDto = new LocalRequestDTO("nome", "codigo", "bairro", "cidade", LocalDate.now());
         Errors errors = new BeanPropertyBindingResult(localDto, "localRequestDTO");
 
-        when(localRepository.findByCodigo(any())).thenReturn(Optional.empty());
+        when(localRepository.existsByCodigo(any())).thenReturn(false);
         codigoValidator.validate(localDto, errors);
 
         assertThat(errors.hasFieldErrors("codigo")).isFalse();
