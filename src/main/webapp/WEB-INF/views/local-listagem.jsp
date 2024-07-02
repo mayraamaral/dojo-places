@@ -13,6 +13,7 @@
     </script>
 </head>
 <body>
+
     <c:if test="${foiAdicionadoLocal}">
         <div class="d-flex justify-content-end pt-4 px-4">
             <div class="alert alert-success col-md-2" role="alert" >
@@ -21,13 +22,7 @@
         </div>
     </c:if>
 
-    <c:if test="${foiDeletadoLocal}">
-        <div class="d-flex justify-content-end pt-4 px-4">
-            <div class="alert alert-danger col-md-2" role="alert" >
-                Local deletado com sucesso!
-            </div>
-        </div>
-    </c:if>
+    <div id="delete-local"></div>
 
     <div class="container">
         <h1 class="text-center py-3">Listagem de locais</h1>
@@ -58,12 +53,37 @@
                     <td class="align-middle">${local.diasDesdeAtualizacaoFormatadoOuStringVazia}</td>
                     <td class="align-middle">
                         <a href="/local-editar?id=${local.id}" class="btn btn-primary">Editar</a>
-                        <a href="/local-deletar?id=${local.id}" class="btn btn-danger">Deletar</a>
+                        <a class="btn btn-danger" onclick="confirmDelete(${local.id})">Deletar</a>
                     </td>
 
                 </tr>
             </c:forEach>
         </table>
     </div>
+
+    <script>
+        function confirmDelete(id) {
+            let confirmacao = confirm('Tem certeza que deseja deletar este local?');
+            if(confirmacao) {
+                fetch("/local-deletar?id=" + id, {method: "POST"})
+                    .then(res => {
+                        if(res.ok) {
+                            const divPai = document.getElementById("delete-local");
+                            const div = document.createElement("div");
+
+                            div.innerHTML = `
+                                    <div class="d-flex justify-content-end pt-4 px-4" id="delete-id-success">
+                                        <div class="alert alert-danger col-md-2" role="alert" >
+                                            Local deletado com sucesso!
+                                        </div>
+                                    </div>
+                            `;
+
+                            divPai.appendChild(div);
+                        }
+                    })
+            }
+        }
+    </script>
 </body>
 </html>
