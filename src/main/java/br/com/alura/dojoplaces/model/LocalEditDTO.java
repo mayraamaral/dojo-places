@@ -23,12 +23,22 @@ public class LocalEditDTO {
     @NotBlank(message = "A cidade não pode ficar em branco")
     private String cidade;
 
+    private boolean isDirty;
+
     public LocalEditDTO(Long id, String nome, String codigo, String bairro, String cidade) {
         this.id = id;
         this.nome = nome;
         this.codigo = codigo;
         this.bairro = bairro;
         this.cidade = cidade;
+    }
+
+    public boolean isDirty() {
+        return isDirty;
+    }
+
+    public void markAsDirty() {
+        this.isDirty = true;
     }
 
     public String getCodigo() {
