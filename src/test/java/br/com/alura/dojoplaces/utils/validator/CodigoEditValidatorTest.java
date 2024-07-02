@@ -1,6 +1,7 @@
 package br.com.alura.dojoplaces.utils.validator;
 
 import br.com.alura.dojoplaces.model.Local;
+import br.com.alura.dojoplaces.model.LocalEditDTO;
 import br.com.alura.dojoplaces.model.LocalRequestDTO;
 import br.com.alura.dojoplaces.repository.LocalRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,25 +14,25 @@ import java.time.LocalDate;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.*;
 
-class CodigoRequestValidatorTest {
+class CodigoEditValidatorTest {
 
     private LocalRepository localRepository;
-    private CodigoRequestValidator codigoValidator;
+    private CodigoEditValidator codigoValidator;
 
     @BeforeEach
     void setUp() {
         localRepository = mock(LocalRepository.class);
-        codigoValidator = new CodigoRequestValidator(localRepository);
+        codigoValidator = new CodigoEditValidator(localRepository);
     }
 
     @Test
     void validate_should_return_true_when_codigo_is_repeated() {
-        LocalRequestDTO localDto = new LocalRequestDTO("nome", "codigo", "bairro", "cidade", LocalDate.now());
-        Local local = localDto.toModel();
-        Errors errors = new BeanPropertyBindingResult(localDto, "localRequestDTO");
+        Local local = new Local("nome", "codigo", "bairro", "cidade", LocalDate.now());
+        LocalEditDTO localEditDTO = local.toEditDTO();
+        Errors errors = new BeanPropertyBindingResult(localEditDTO, "localEditDTO");
 
-        when(localRepository.existsByCodigo(any())).thenReturn(true);
-        codigoValidator.validate(localDto, errors);
+        when(localRepository.existsByCodigoAndIdNot(any(), any())).thenReturn(true);
+        codigoValidator.validate(localEditDTO, errors);
 
         assertThat(errors.hasFieldErrors("codigo")).isTrue();
         assertThat("codigo.exist").isEqualTo(errors.getFieldError("codigo").getCode());
@@ -39,10 +40,10 @@ class CodigoRequestValidatorTest {
 
     @Test
     void validate_should_return_false_when_codigo_is_repeated() {
-        LocalRequestDTO localDto = new LocalRequestDTO("nome", "codigo", "bairro", "cidade", LocalDate.now());
-        Errors errors = new BeanPropertyBindingResult(localDto, "localRequestDTO");
+        LocalEditDTO localDto = new LocalEditDTO(1L, "nome", "codigo", "bairro", "cidade");
+        Errors errors = new BeanPropertyBindingResult(localDto, "localEditDTO");
 
-        when(localRepository.existsByCodigo(any())).thenReturn(false);
+        when(localRepository.existsByCodigoAndIdNot(any(), any())).thenReturn(false);
         codigoValidator.validate(localDto, errors);
 
         assertThat(errors.hasFieldErrors("codigo")).isFalse();

@@ -6,13 +6,16 @@ import br.com.alura.dojoplaces.model.LocalEditDTO;
 import br.com.alura.dojoplaces.model.LocalResponseDTO;
 import br.com.alura.dojoplaces.repository.LocalRepository;
 
+import br.com.alura.dojoplaces.utils.validator.CodigoEditValidator;
 import br.com.alura.dojoplaces.utils.validator.CodigoRequestValidator;
 import jakarta.validation.Valid;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -24,11 +27,23 @@ import java.util.Optional;
 public class LocalController {
 
     private final LocalRepository localRepository;
-    private final CodigoRequestValidator codigoValidator;
+    private final CodigoRequestValidator codigoRequestValidator;
+    private final CodigoEditValidator codigoEditValidator;
 
-    public LocalController(LocalRepository localRepository, CodigoRequestValidator codigoValidator) {
+    public LocalController(LocalRepository localRepository, CodigoRequestValidator codigoValidator, CodigoEditValidator codigoEditValidator) {
         this.localRepository = localRepository;
-        this.codigoValidator = codigoValidator;
+        this.codigoRequestValidator = codigoValidator;
+        this.codigoEditValidator = codigoEditValidator;
+    }
+
+    @InitBinder("localRequestDTO")
+    public void initBinderRequest(WebDataBinder webDataBinder) {
+        webDataBinder.addValidators(codigoRequestValidator);
+    }
+
+    @InitBinder("localEditDTO")
+    public void initBinderEdit(WebDataBinder webDataBinder) {
+        webDataBinder.addValidators(codigoEditValidator);
     }
 
     @GetMapping("/local")
@@ -51,8 +66,6 @@ public class LocalController {
 
     @PostMapping("/local-salvar")
     public String adicionar(@Valid LocalRequestDTO localRequestDTO, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
-        codigoValidator.validate(localRequestDTO, result);
-
         if(result.hasErrors()) {
             return formAdicionar(localRequestDTO, model);
         }
@@ -65,28 +78,21 @@ public class LocalController {
     }
 
     @GetMapping("/local-editar")
-    public String formEdicao(@RequestParam("id") Long id, Model model) {
+    public String formEdicao(@RequestParam("id") Long id, LocalEditDTO localEditDTO, Model model) {
+        if(localEditDTO.isDirty()) {
+            model.addAttribute("localEditDTO", localEditDTO);
+
+            return "local-edicao";
+        }
+
         Optional<Local> localToBeEdited = localRepository.findById(id);
 
         if(localToBeEdited.isEmpty()) {
-            return "local-nao-encontrado";
+            return "redirect:/local-nao-encontrado";
         }
 
-        LocalEditDTO localEditDTO = localToBeEdited.get().toEditDTO();
-        model.addAttribute("localEditDTO", localEditDTO);
-
-        return "local-edicao";
-    }
-
-    public String formEdicao(LocalEditDTO localEditDTO, Model model) {
-//        Optional<Local> localToBeEdited = localRepository.findById(id);
-
-//        if(localToBeEdited.isEmpty()) {
-//            return "local-nao-encontrado";
-//        }
-
-//        LocalEditDTO localEdit = localToBeEdited.get().toEditDTO();
-        model.addAttribute("localEditDTO", localEditDTO);
+        LocalEditDTO local = localToBeEdited.get().toEditDTO();
+        model.addAttribute("localEditDTO", local);
 
         return "local-edicao";
     }
@@ -94,10 +100,9 @@ public class LocalController {
     @PostMapping("/local-editar")
     public String editar(@Valid LocalEditDTO localEditDTO, BindingResult result, Model model, Long id) {
         if(result.hasErrors()) {
-            return formEdicao(localEditDTO, model);
+            localEditDTO.markAsDirty();
+            return formEdicao(localEditDTO.getId(), localEditDTO, model);
         }
-
-        System.out.println(localEditDTO.getId());
 
         Local localToBeEdited = localRepository.findById(id).get();
         localToBeEdited.edit(localEditDTO);
@@ -107,13 +112,9 @@ public class LocalController {
         return "redirect:/local";
     }
 
-    @GetMapping("/local-deletar")
-    public String deletar(@RequestParam("id") Long id, RedirectAttributes redirectAttributes) {
+    @PostMapping("/local-deletar")
+    public void deletar(@RequestParam("id") Long id, RedirectAttributes redirectAttributes) {
         localRepository.deleteById(id);
-
-        redirectAttributes.addFlashAttribute("foiDeletadoLocal", true);
-
-        return "redirect:/local";
     }
 
     @GetMapping("/local-nao-encontrado")
