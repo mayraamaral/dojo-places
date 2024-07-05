@@ -10,6 +10,7 @@ import br.com.alura.dojoplaces.utils.validator.CodigoEditValidator;
 import br.com.alura.dojoplaces.utils.validator.CodigoRequestValidator;
 import jakarta.validation.Valid;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -113,8 +114,12 @@ public class LocalController {
     }
 
     @PostMapping("/local-deletar")
-    public void deletar(@RequestParam("id") Long id, RedirectAttributes redirectAttributes) {
+    public String deletar(@RequestParam("id") Long id, RedirectAttributes redirectAttributes) {
         localRepository.deleteById(id);
+
+        redirectAttributes.addFlashAttribute("foiDeletadoLocal", true);
+
+        return "redirect:/local";
     }
 
     @GetMapping("/local-nao-encontrado")
