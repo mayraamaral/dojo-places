@@ -7,12 +7,28 @@
           rel="stylesheet"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous"
     />
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-            crossorigin="anonymous">
-    </script>
 </head>
 <body>
+
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Deletar local</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Você deseja realmente deletar este local?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                        <form method="post" action="local-deletar?id=${local.id}">
+                            <button type="submit" class="btn btn-primary">Confirmar exclusão</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     <c:if test="${foiAdicionadoLocal}">
         <div class="d-flex justify-content-end pt-4 px-4">
@@ -59,36 +75,48 @@
                     <td class="align-middle">${local.diasDesdeAtualizacaoFormatadoOuStringVazia}</td>
                     <td class="d-flex align-middle gap-1">
                         <a href="/local-editar?id=${local.id}" class="btn btn-primary h-50">Editar</a>
-                        <form method="post" action="/local-deletar?id=${local.id}">
-                            <button class="btn btn-danger" onclick="return confirmDelete()" type="submit">Deletar</button>
-                        </form>
+                        <button type="button" class="btn btn-danger" onclick="confirmDelete(${local.id})">Deletar</button>
                     </td>
-
                 </tr>
             </c:forEach>
         </table>
     </div>
 
-    <script>
-        function confirmDelete() {
+        <script>
+            function confirmDelete(localId) {
+                let modalHtml = `
+            <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel">Deletar local</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Você deseja realmente deletar este local?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <form method="post" action="/local-deletar?id=
+        `;
+                modalHtml += localId;
+                modalHtml += `">
+                                <button type="submit" class="btn btn-danger">Confirmar exclusão</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
 
-            return confirm('Tem certeza que deseja deletar este local?');
-            // if(confirmacao) {
-            //     fetch("/local-deletar?id=" + id, {method: "POST"})
-            //         .then(res => {
-            //             if(res.ok) {
-            //                 const divPai = document.getElementById("delete-local");
-            //                 const div = document.createElement("div");
-            //
-            //                 div.innerHTML = `
-            //
-            //                 `;
-            //
-            //                 divPai.appendChild(div);
-            //             }
-            //         })
-            // }
-        }
+                document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+                const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+                deleteModal.show();
+            }
+        </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+            crossorigin="anonymous">
     </script>
 </body>
 </html>
