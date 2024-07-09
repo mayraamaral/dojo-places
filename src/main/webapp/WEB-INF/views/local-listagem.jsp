@@ -82,38 +82,7 @@
         </table>
     </div>
 
-        <script>
-            function confirmDelete(localId) {
-                let modalHtml = `
-            <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="deleteModalLabel">Deletar local</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            Você deseja realmente deletar este local?
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            <form method="post" action="/local-deletar?id=
-        `;
-                modalHtml += localId;
-                modalHtml += `">
-                                <button type="submit" class="btn btn-danger">Confirmar exclusão</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>`;
-
-                document.body.insertAdjacentHTML('beforeend', modalHtml);
-
-                const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
-                deleteModal.show();
-            }
-        </script>
+    <script src="/assets/js/local-listagem.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
             crossorigin="anonymous">
