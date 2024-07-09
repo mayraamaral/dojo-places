@@ -18,6 +18,9 @@
         <h1 class="text-center py-3">Cadastro de locais</h1>
         <div class="d-flex justify-content-center">
             <form:form action="/local-salvar" method="post" modelAttribute="localRequestDTO">
+                <label path="nome" class="form-label">CEP:</label>
+                <input id="cep" type="text" class="form-control" />
+
                 <form:label path="nome" class="form-label">Nome:</form:label>
                 <form:input path="nome" type="text" class="form-control" />
                 <form:errors path="nome" cssClass="text-danger d-block" />
@@ -27,11 +30,11 @@
                 <form:errors path="codigo" cssClass="text-danger d-block" />
 
                 <form:label path="bairro" class="form-label">Bairro:</form:label>
-                <form:input path="bairro" type="text" class="form-control" />
+                <form:input path="bairro" id="bairro" type="text" class="form-control" />
                 <form:errors path="bairro" cssClass="text-danger d-block" />
 
                 <form:label path="cidade" class="form-label">Cidade:</form:label>
-                <form:input path="cidade" type="text" class="form-control" />
+                <form:input path="cidade" id="cidade" type="text" class="form-control" />
                 <form:errors path="cidade" cssClass="text-danger d-block" />
 
                 <form:label path="dataCriacao" class="form-label">Data de criação:</form:label>
@@ -44,5 +47,6 @@
             </form:form>
         </div>
     </div>
+    <script src="/assets/js/local-cadastro.js"></script>
 </body>
 </html>
