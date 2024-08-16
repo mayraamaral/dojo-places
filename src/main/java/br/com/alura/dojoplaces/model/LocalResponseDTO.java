@@ -57,19 +57,25 @@ public class LocalResponseDTO {
         return DateUtils.formatDate(dataAtualizacao);
     }
 
-    public int getDiasDesdeADataAtualizacao() {
+    public Integer getDiasDesdeADataAtualizacao() {
         if(Optional.ofNullable(dataAtualizacao).isEmpty()) {
-            return 0;
+            return null;
         }
 
         return Period.between(dataAtualizacao, LocalDate.now()).getDays();
     }
 
     public String getDiasDesdeAtualizacaoFormatadoOuStringVazia() {
-        int diasAtualizacao = getDiasDesdeADataAtualizacao();
+        Integer diasAtualizacao = getDiasDesdeADataAtualizacao();
 
-        if(diasAtualizacao > 0) {
-            return "Atualizado há " + diasAtualizacao + " dias";
+        if(diasAtualizacao != null) {
+            if(diasAtualizacao > 0) {
+                return "Atualizado há " + diasAtualizacao + " dias";
+            }
+
+            if(diasAtualizacao == 0) {
+                return "Atualizado hoje";
+            }
         }
 
         return "";
