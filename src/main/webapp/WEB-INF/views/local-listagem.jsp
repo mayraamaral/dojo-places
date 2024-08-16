@@ -10,26 +10,6 @@
 </head>
 <body>
 
-        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Deletar local</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        Você deseja realmente deletar este local?
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                        <form method="post" action="local-deletar?id=${local.id}">
-                            <button type="submit" class="btn btn-primary">Confirmar exclusão</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
     <c:if test="${foiAdicionadoLocal}">
         <div class="d-flex justify-content-end pt-4 px-4">
             <div class="alert alert-success col-md-2" role="alert" >
