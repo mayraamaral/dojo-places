@@ -38,7 +38,7 @@ class CodigoRequestValidatorTest {
     }
 
     @Test
-    void validate_should_return_false_when_codigo_is_repeated() {
+    void validate_should_return_false_when_codigo_is_not_repeated() {
         LocalRequestDTO localDto = new LocalRequestDTO("nome", "codigo", "bairro", "cidade", LocalDate.now());
         Errors errors = new BeanPropertyBindingResult(localDto, "localRequestDTO");
 

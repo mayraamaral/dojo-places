@@ -39,7 +39,7 @@ class CodigoEditValidatorTest {
     }
 
     @Test
-    void validate_should_return_false_when_codigo_is_repeated() {
+    void validate_should_return_false_when_codigo_is_not_repeated() {
         LocalEditDTO localDto = new LocalEditDTO(1L, "nome", "codigo", "bairro", "cidade");
         Errors errors = new BeanPropertyBindingResult(localDto, "localEditDTO");
 
